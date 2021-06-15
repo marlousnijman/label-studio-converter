@@ -149,7 +149,6 @@ def convert_task_dir(items, out_dir, out_format='numpy'):
     """ Directory with tasks and annotation to brush images, out_format = numpy | png
     """
     for item in items:
-        print(out_dir)
         convert_task(item, out_dir, out_format)
 
 

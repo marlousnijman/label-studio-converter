@@ -3,6 +3,7 @@ import os
 import io
 
 from label_studio_converter.converter import Converter, Format
+from label_studio_converter import brush
 
 
 class ExpandFullPath(argparse.Action):
@@ -73,13 +74,16 @@ def main():
     elif args.format == Format.CSV:
         header = not args.csv_no_header
         sep = args.csv_separator
-        c.convert_to_csv(args.input, args.output, sep=sep, header=header, is_dir=not args.heartex_format)
+        c.convert_to_csv(args.input, args.output, sep=sep, header=header, is_dir=False)
     elif args.format == Format.CONLL2003:
         c.convert_to_conll2003(args.input, args.output, is_dir=not args.heartex_format)
     elif args.format == Format.COCO:
         c.convert_to_coco(args.input, args.output, output_image_dir=args.image_dir, is_dir=not args.heartex_format)
     elif args.format == Format.VOC:
         c.convert_to_voc(args.input, args.output, output_image_dir=args.image_dir, is_dir=not args.heartex_format)
+    elif args.format == Format.BRUSH_TO_PNG:
+        items = c.iter_from_json_file(args.input)
+        brush.convert_task_dir(items, args.output, out_format='png')
 
     print('Congratulations! Now check:\n' + args.output)
 

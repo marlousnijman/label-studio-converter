@@ -53,7 +53,6 @@ class Format(Enum):
 
 
 class Converter(object):
-
     _FORMAT_INFO = {
         Format.JSON: {
             'title': 'JSON',
@@ -148,7 +147,7 @@ class Converter(object):
     def convert(self, input_data, output_data, format, is_dir=True, **kwargs):
         if isinstance(format, str):
             format = Format.from_string(format)
-            
+
         if format == Format.JSON:
             self.convert_to_json(input_data, output_data, is_dir=is_dir)
         elif format == Format.JSON_MIN:
@@ -222,7 +221,8 @@ class Converter(object):
         if not ('Image' in input_tag_types and ('RectangleLabels' in output_tag_types or
                                                 'PolygonLabels' in output_tag_types)):
             all_formats.remove(Format.COCO.name)
-        if not ('Image' in input_tag_types and ('BrushLabels' in output_tag_types or 'brushlabels' in output_tag_types)):
+        if not ('Image' in input_tag_types and (
+                'BrushLabels' in output_tag_types or 'brushlabels' in output_tag_types)):
             all_formats.remove(Format.BRUSH_TO_NUMPY.name)
             all_formats.remove(Format.BRUSH_TO_PNG.name)
         if not (('Audio' in input_tag_types or 'AudioPlus' in input_tag_types) and 'TextArea' in output_tag_types):
@@ -269,13 +269,13 @@ class Converter(object):
 
         # get last not skipped completion and make result from it
         annotations = task['annotations'] if 'annotations' in task else task['completions']
-        
+
         # skip cancelled annotations
         cancelled = lambda x: not (x.get('skipped', False) or x.get('was_cancelled', False))
         annotations = list(filter(cancelled, annotations))
         if not annotations:
             return None
-        
+
         # sort by creation time
         annotations = sorted(annotations, key=lambda x: x.get('created_at', 0), reverse=True)
 
@@ -532,8 +532,8 @@ class Converter(object):
             if len(labels) == 0:
                 logger.error('Empty bboxes.')
                 continue
-            label_path = os.path.join(output_label_dir, os.path.splitext(os.path.basename(image_path))[0]+'.txt')
-            annotations =[]
+            label_path = os.path.join(output_label_dir, os.path.splitext(os.path.basename(image_path))[0] + '.txt')
+            annotations = []
             for label in labels:
                 if 'rectanglelabels' in label:
                     category_name = label['rectanglelabels'][0]
@@ -549,8 +549,8 @@ class Converter(object):
                 category_id = category_name_to_id[category_name]
 
                 if "rectanglelabels" in label:
-                    x = (label['x'] + label['width']/2) / 100
-                    y = (label['y'] + label['height']/2) / 100
+                    x = (label['x'] + label['width'] / 2) / 100
+                    y = (label['y'] + label['height'] / 2) / 100
                     w = label['width'] / 100
                     h = label['height'] / 100
                     annotations.append([category_id, x, y, w, h])
@@ -559,13 +559,13 @@ class Converter(object):
             with open(label_path, 'w') as f:
                 for annotation in annotations:
                     for idx, l in enumerate(annotation):
-                        if idx == len(annotation) -1:
+                        if idx == len(annotation) - 1:
                             f.write(f"{l}\n")
                         else:
                             f.write(f"{l} ")
         with open(class_file, 'w', encoding='utf8') as f:
             for c in categories:
-                f.write(c['name']+'\n')
+                f.write(c['name'] + '\n')
         with io.open(notes_file, mode='w', encoding='utf8') as fout:
             json.dump({
                 'categories': categories,

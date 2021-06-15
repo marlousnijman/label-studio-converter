@@ -11,6 +11,7 @@
     - [CoNLL 2003](#conll-2003)
     - [COCO](#coco)
     - [Pascal VOC XML](#pascal-voc-xml)
+    - [Brush to PNG](#brush-to-png)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -258,6 +259,22 @@ Corresponding annotations could be found in `tmp/voc-annotations/*.xml`:
 ```
 
 Use cases: image object detection
+
+#### Brush to PNG
+
+Create a new environment using 
+```
+conda create --name lstudio
+conda activate lstudio
+conda install --file requirements.txt
+```
+Add a file with the task configurations, a desired output folder and the .json file containing the data.
+Then you can run the following command:
+```
+python cli.py -i data.json -c config.xml -o output -f BRUSH_TO_PNG
+```
+The .pngs can now be found in the output folder.
+
 
 ## Contributing
 
